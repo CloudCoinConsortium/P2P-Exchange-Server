@@ -8,7 +8,8 @@ header("Content-Type: application/json; charset=UTF-8");
 // include database and object files
 include_once '../../config/database.php';
 include_once '../../objects/sellorder.php';
- 
+include_once '../../middleware/authenticate.php';
+
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
@@ -45,7 +46,8 @@ if($num>0){
             "price" => $price,
             "currency" => $currency,
             "dateposted" => $dateposted,
-            "paymentmethod" => $paymentmethod
+            "paymentmethod" => $paymentmethod,
+            "url" => getRaidaUrl(1)
         );
  
         array_push($products_arr["records"], $product_item);
