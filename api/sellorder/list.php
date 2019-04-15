@@ -6,20 +6,20 @@ header("Content-Type: application/json; charset=UTF-8");
 // database connection will be here
 
 // include database and object files
-include_once '../config/database.php';
-include_once '../objects/product.php';
+include_once '../../config/database.php';
+include_once '../../objects/sellorder.php';
  
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
  
 // initialize object
-$product = new Product($db);
+$sellorder = new SellOrder($db);
  
 // read products will be here
 
 // query products
-$stmt = $product->read();
+$stmt = $sellorder->read();
 $num = $stmt->rowCount();
  
 // check if more than 0 record found
@@ -40,11 +40,12 @@ if($num>0){
  
         $product_item=array(
             "id" => $id,
-            "name" => $name,
-            "description" => html_entity_decode($description),
+            "username" => $username,
+            "qty" => $qty,
             "price" => $price,
-            "category_id" => $category_id,
-            "category_name" => $category_name
+            "currency" => $currency,
+            "dateposted" => $dateposted,
+            "paymentmethod" => $paymentmethod
         );
  
         array_push($products_arr["records"], $product_item);
@@ -63,7 +64,7 @@ else{
  
     // tell the user no products found
     echo json_encode(
-        array("message" => "No products found.")
+        array("message" => "No Sell Orders found.")
     );
 }
 

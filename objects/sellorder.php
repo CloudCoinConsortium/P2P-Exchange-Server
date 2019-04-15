@@ -24,14 +24,11 @@ function read(){
  
     // select all query
     $query = "SELECT
-                c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
+                c.id,c.username as username, c.qty, c.price, c.currency, c.dateposted, c.paymentmethod
             FROM
-                " . $this->table_name . " p
-                LEFT JOIN
-                    categories c
-                        ON p.category_id = c.id
+                " . $this->table_name . " c
             ORDER BY
-                p.created DESC";
+                c.dateposted DESC";
  
     // prepare query statement
     $stmt = $this->conn->prepare($query);
