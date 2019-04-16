@@ -9,11 +9,17 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once '../../config/database.php';
 include_once '../../objects/sellorder.php';
 include_once '../../middleware/authenticate.php';
+include_once '../../test.php';
 
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
- 
+
+$ticket = getTestTicket();
+
+$authresponse = authenticate(6300997, $ticket["ticket"],0);
+
+
 // initialize object
 $sellorder = new SellOrder($db);
  
@@ -47,10 +53,12 @@ if($num>0){
             "currency" => $currency,
             "dateposted" => $dateposted,
             "paymentmethod" => $paymentmethod,
-            "url" => getRaidaUrl(1)
+            "url" => getRaidaUrl(1),
+            "authresponse" => $authresponse,
+            "ticketresponse" => $ticket
         );
  
-        array_push($products_arr["records"], $product_item);
+        array_push($products_arr["records"], $authresponse);
     }
  
     // set response code - 200 OK
@@ -66,7 +74,7 @@ else{
  
     // tell the user no products found
     echo json_encode(
-        array("message" => "No Sell Orders found.")
+        array("message" => "No Sell Orders found.", "authresponse" => $authresponse)
     );
 }
 
