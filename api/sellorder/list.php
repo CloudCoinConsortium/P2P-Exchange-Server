@@ -18,17 +18,26 @@ $db = $database->getConnection();
 $ticket = getTestTicket();
 
 $authresponse = authenticate(6300997, $ticket["ticket"],0);
+$offset= $_GET['offset'];
+    $pageSize = $_GET['pagesize'];
 
-
-// initialize object
+    if($offset == null) {
+        $offset = 0;
+    }
+    if($pageSize == null) {
+        $pageSize = 20;
+    }
+if($authresponse) {
+    
+    // initialize object
 $sellorder = new SellOrder($db);
  
 // read products will be here
 
 // query products
-$stmt = $sellorder->read();
+$stmt = $sellorder->readSellOrders($offset, $pageSize);
 $num = $stmt->rowCount();
- 
+//$sql = readsql();
 // check if more than 0 record found
 if($num>0){
  
@@ -46,19 +55,17 @@ if($num>0){
         extract($row);
  
         $product_item=array(
-            "id" => $id,
-            "username" => $username,
-            "qty" => $qty,
-            "price" => $price,
-            "currency" => $currency,
-            "dateposted" => $dateposted,
-            "paymentmethod" => $paymentmethod,
-            "url" => getRaidaUrl(1),
-            "authresponse" => $authresponse,
-            "ticketresponse" => $ticket
+            "RecordId" => $id,
+            "uName" => $name,
+            "Quantity" => $qty,
+            "Rate" => $price,
+            "Currency" => $currency,
+            "Dated" => $dateposted,
+            "PayBy" => $paymentmethod
         );
  
-        array_push($products_arr["records"], $authresponse);
+
+        array_push($products_arr["records"], $product_item);
     }
  
     // set response code - 200 OK
@@ -77,6 +84,17 @@ else{
         array("message" => "No Sell Orders found.", "authresponse" => $authresponse)
     );
 }
+}
+else {
+    http_response_code(401);
+ 
+    // tell the user no products found
+    echo json_encode(
+        array("message" => "Unauthorised.")
+    );
+
+}
+
 
 
 

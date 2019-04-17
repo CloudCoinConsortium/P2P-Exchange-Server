@@ -28,7 +28,7 @@ function read(){
             FROM
                 " . $this->table_name . " c
             ORDER BY
-                c.dateposted DESC";
+                c.dateposted DESC limit 2,10";
  
     // prepare query statement
     $stmt = $this->conn->prepare($query);
@@ -38,4 +38,34 @@ function read(){
  
     return $stmt;
 }
+
+function readsql(){
+ 
+    // select all query
+    $query = "";
+ 
+    // prepare query statement
+    
+    return $query;
+}
+
+function readSellOrders($offset,$pageSize){
+ 
+    // select all query
+    $query = "SELECT
+                c.id,c.username as name, c.qty, c.price, c.currency, c.dateposted, c.paymentmethod
+            FROM
+                " . $this->table_name . " c
+            ORDER BY
+                c.dateposted DESC limit ". $offset . "," . $pageSize;
+ 
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+ 
+    // execute query
+    $stmt->execute();
+ 
+    return $stmt;
+}
+
 }
