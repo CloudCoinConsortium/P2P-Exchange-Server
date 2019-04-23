@@ -119,9 +119,9 @@ function readSellOrders($offset,$pageSize){
  
     // select all query
     $query = "SELECT
-                c.id,c.username as name, c.qty, c.price, c.currency, c.dateposted, c.paymentmethod
+                c.id,u.username as name, c.qty, c.price, c.currency, c.dateposted, c.paymentmethod
             FROM
-                " . $this->table_name . " c
+                " . $this->table_name . " c,users u where c.coinsn=u.coinsn
             ORDER BY
                 c.dateposted DESC limit ". $offset . "," . $pageSize;
  
