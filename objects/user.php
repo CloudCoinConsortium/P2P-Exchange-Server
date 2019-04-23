@@ -57,7 +57,7 @@ echo $sql;
     
     // execute query
     $result = $this->conn->query($sql);
-    echo $result;
+    //echo $result;
     if($result){
         return true;
     }

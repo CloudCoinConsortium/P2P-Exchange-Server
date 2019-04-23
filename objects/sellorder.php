@@ -7,12 +7,13 @@ class SellOrder{
  
     // object properties
     public $id;
-    public $name;
-    public $description;
+    public $coinsn;
+    public $currency;
     public $price;
-    public $category_id;
-    public $category_name;
+    public $paymentmethod;
+    public $qty;
     public $created;
+    public $status;
  
     // constructor with $db as database connection
     public function __construct($db){
@@ -39,16 +40,81 @@ function read(){
     return $stmt;
 }
 
-function readsql(){
+function executeCountQuery($sql){
  
-    // select all query
-    $query = "";
- 
-    // prepare query statement
-    
-    return $query;
+    $result=$this->conn->query($sql);
+    //$data=$this->conn->mysql_fetch_assoc($result);
+    //echo $result[0];
+
+    $data = $result->fetch(PDO::FETCH_BOTH);
+print_r($data);
+    return $data[0];
 }
 
+function validate() {
+    if($this->qty<=0) {
+        return false;
+    }
+    if($this->price<=0) {
+        return false;
+    }
+    if($this->currency=="") {
+        return false;
+    }
+    if($this->paymentmethod=="") {
+        return false;
+    }
+    return true;
+}
+    // create product
+    function create(){
+ 
+        
+        // query to insert record
+        $query = "INSERT INTO
+                    " . $this->table_name . "
+                SET
+                    coinsn=:coinsn, email=:email, dateofjoining=:dateofjoining,username=:username";
+     
+        // prepare query
+        // $stmt = $this->conn->prepare($query);
+        
+        $this->dateposted = gmdate('Y-m-d h:i:s', time());
+        // sanitize
+        $this->coinsn=htmlspecialchars(strip_tags($this->coinsn));
+        $this->qty=htmlspecialchars(strip_tags($this->qty));
+        $this->price=htmlspecialchars(strip_tags($this->price));
+        $this->paymentmethod=htmlspecialchars(strip_tags($this->paymentmethod));
+        $this->currency=htmlspecialchars(strip_tags($this->currency));
+        
+        
+        $sql = "INSERT INTO sellorders (coinsn, qty, price,currency, dateposted,paymentmethod,status)
+        VALUES ( " . $this->coinsn .",'". $this->qty ."','". $this->price ."','". $this->currency. "','".
+         $this->dateposted. "','". $this->paymentmethod . "',1)" ;
+    
+       //echo $sql;
+
+       $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . $this->coinsn ." and status=1";
+
+       $openSellOrderCount = $this->executeCountQuery($countquery);
+       // $this->qty =0;
+       if(!$this->validate()) {
+        return false;
+       }
+       if($openSellOrderCount > 0) {
+           return false;
+       }
+
+        $result = $this->conn->query($sql);
+        if($result){
+            return true;
+        }
+     
+        return false;
+         
+    }
+
+    
 function readSellOrders($offset,$pageSize){
  
     // select all query

@@ -30,19 +30,16 @@ echo json_encode('test');
 if($authresponse) {
     //echo json_encode('test');
     
-    // show products data in json format
-    //echo json_encode("Added");
-    $user = new User($db);
-    $user->coinsn =2;
-    $user->username='navraj1';
-    $user->email='navraj1@outlook.com';
+    $sellorder = new SellOrder($db);
+    $sellorder->coinsn =2;
+    $sellorder->qty='5000';
+    $sellorder->price='0.01';
+    $sellorder->currency = "USD";
+    $sellorder->created = "";
+    $sellorder->status = 1;
+    $sellorder ->paymentmethod = "Paypal";
 
-    //$result = $user.create();
-    //echo json_encode("Added record 0");
-    // echo json_encode($user->username);
-
-
-    if($user->create()) {
+    if($sellorder->create()) {
         http_response_code(200);
     // show products data in json format
         echo json_encode("Added record ");
