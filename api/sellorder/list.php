@@ -18,6 +18,8 @@ $db = $database->getConnection();
 $ticket = getTestTicket();
 
 $authresponse = authenticate(6300997, $ticket["ticket"],0);
+$opt= $_GET['opt'];
+
 $offset= $_GET['offset'];
     $pageSize = $_GET['pagesize'];
 

@@ -157,6 +157,43 @@ function validate() {
          
     }
 
+    function delete(){
+ 
+        
+       
+        // prepare query
+        // $stmt = $this->conn->prepare($query);
+        
+        // sanitize
+        $this->coinsn=htmlspecialchars(strip_tags($this->coinsn));
+        $this->id=htmlspecialchars(strip_tags($this->id));
+        
+        
+        $sql = "delete from sellorders  where id= " . $this->id  ;
+    
+       echo $sql;
+
+       $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . 
+       $this->coinsn ." and status=1 and id=". $this->id;
+        echo $countquery;
+       $openSellOrderCount = $this->executeCountQuery($countquery);
+       // $this->qty =0;
+       if(!$this->validate()) {
+        return false;
+       }
+       if($openSellOrderCount == 0) {
+           return false;
+       }
+
+        $result = $this->conn->query($sql);
+        if($result){
+            return true;
+        }
+     
+        return false;
+         
+    }
+
     
 function readSellOrders($offset,$pageSize){
  

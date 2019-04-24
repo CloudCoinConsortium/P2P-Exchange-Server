@@ -31,7 +31,7 @@ if($authresponse) {
     
     $sellorder = new SellOrder($db);
     $sellorder->id=3;
-    $sellorder->coinsn =2;
+    $sellorder->coinsn =3;
     $sellorder->qty='50000';
     $sellorder->price='0.02';
     $sellorder->currency = "USDD";
