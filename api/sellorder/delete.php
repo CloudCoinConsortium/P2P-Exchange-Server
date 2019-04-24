@@ -25,34 +25,33 @@ $ticket = getTestTicket();
 $authresponse = authenticate(6300997, $ticket["ticket"],0);
 //echo json_encode($ticket);
 echo json_encode($authresponse);
-echo json_encode('test');
 
 if($authresponse) {
     //echo json_encode('test');
     
     $sellorder = new SellOrder($db);
-    $sellorder->coinsn =3;
-    $sellorder->qty='5000';
-    $sellorder->price='0.01';
-    $sellorder->currency = "USD";
+    $sellorder->id=3;
+    $sellorder->coinsn =2;
+    $sellorder->qty='50000';
+    $sellorder->price='0.02';
+    $sellorder->currency = "USDD";
     $sellorder->created = "";
     $sellorder->status = 1;
     $sellorder ->paymentmethod = "Paypal";
 
-    if($sellorder->create()) {
+    if($sellorder->delete()) {
         http_response_code(200);
     // show products data in json format
-        echo json_encode("Added record ");
+        echo json_encode("Deleted the Sell Order");
     }
     else {
-        echo json_encode("Error Creating user.");
-  
+        http_response_code(401);
+        echo json_encode("Error Deleting Sell Order.");
     }
 }
 else {
     http_response_code(401);
  
-    // show products data in json format
     echo json_encode("Error--");
 
 }

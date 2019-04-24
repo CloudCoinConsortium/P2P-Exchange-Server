@@ -14,7 +14,7 @@ class SellOrder{
     public $qty;
     public $created;
     public $status;
- 
+    public $lastmodified;
     // constructor with $db as database connection
     public function __construct($db){
         $this->conn = $db;
@@ -88,9 +88,9 @@ function validate() {
         $this->currency=htmlspecialchars(strip_tags($this->currency));
         
         
-        $sql = "INSERT INTO sellorders (coinsn, qty, price,currency, dateposted,paymentmethod,status)
+        $sql = "INSERT INTO sellorders (coinsn, qty, price,currency, dateposted,paymentmethod,status,lastmodified)
         VALUES ( " . $this->coinsn .",'". $this->qty ."','". $this->price ."','". $this->currency. "','".
-         $this->dateposted. "','". $this->paymentmethod . "',1)" ;
+         $this->dateposted. "','". $this->paymentmethod . "',1,'". $this->dateposted ."')" ;
     
        //echo $sql;
 
@@ -102,6 +102,49 @@ function validate() {
         return false;
        }
        if($openSellOrderCount > 0) {
+           return false;
+       }
+
+        $result = $this->conn->query($sql);
+        if($result){
+            return true;
+        }
+     
+        return false;
+         
+    }
+
+    function update(){
+ 
+        
+       
+        // prepare query
+        // $stmt = $this->conn->prepare($query);
+        
+        $this->lastmodified = gmdate('Y-m-d h:i:s', time());
+        // sanitize
+        $this->coinsn=htmlspecialchars(strip_tags($this->coinsn));
+        $this->qty=htmlspecialchars(strip_tags($this->qty));
+        $this->price=htmlspecialchars(strip_tags($this->price));
+        $this->paymentmethod=htmlspecialchars(strip_tags($this->paymentmethod));
+        $this->currency=htmlspecialchars(strip_tags($this->currency));
+        
+        
+        $sql = "UPDATE sellorders SET qty=". $this->qty.", price=". $this->price .",currency='". $this->currency.
+        "',paymentmethod='". $this->paymentmethod."',lastmodified='". $this->lastmodified."' where 
+        id= " . $this->id ."" ;
+    
+       echo $sql;
+
+       $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . 
+       $this->coinsn ." and status=1 and id=". $this->id;
+
+       $openSellOrderCount = $this->executeCountQuery($countquery);
+       // $this->qty =0;
+       if(!$this->validate()) {
+        return false;
+       }
+       if($openSellOrderCount == 0) {
            return false;
        }
 
