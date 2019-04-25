@@ -23,38 +23,42 @@ $db = $database->getConnection();
 $ticket = getTestTicket();
 $ticket= $_GET['ticket'];
 $raida = $_GET['raida'];
+$qty = $_GET['qty'];
+$price = $_GET['price'];
+$currency = $_GET['currency'];
+$paymentmethod =$_GET['paymentmethod'];
 
 $authresponse = authenticate( $ticket,$raida);
 //echo json_encode($ticket);
 echo json_encode($authresponse);
 
-if($authresponse) {
+if($authresponse["result"]) {
     //echo json_encode('test');
     
     $buyorder = new BuyOrder($db);
-    $buyorder->coinsn =3;
-    $buyorder->qty='5000';
-    $buyorder->price='0.01';
-    $buyorder->currency = "USD";
+    $buyorder->coinsn =$authresponse["sn"];
+    $buyorder->qty=$qty;
+    $buyorder->price=$price;
+    $buyorder->currency = $currency;
     $buyorder->created = "";
     $buyorder->status = 1;
-    $buyorder->paymentmethod = "Paypal";
+    $buyorder->paymentmethod = $paymentmethod;
 
     if($buyorder->create()) {
         http_response_code(200);
     // show products data in json format
-        echo json_encode("Added record ");
+        echo json_encode("Added New Buy Order ");
     }
     else {
-        echo json_encode("Error Creating user.");
+        http_response_code(403);
+        echo json_encode("Error Creating Buy Order.");
   
     }
 }
 else {
     http_response_code(401);
- 
     // show products data in json format
-    echo json_encode("Error--");
+    echo json_encode("Unauthorised");
 
 }
 

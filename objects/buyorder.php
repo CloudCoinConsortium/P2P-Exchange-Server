@@ -22,24 +22,6 @@ class BuyOrder{
     }
 
     // read products
-function read(){
- 
-    // select all query
-    $query = "SELECT
-                c.id,c.username as username, c.qty, c.price, c.currency, c.dateposted, c.paymentmethod
-            FROM
-                " . $this->table_name . " c
-            ORDER BY
-                c.dateposted DESC limit 2,10";
- 
-    // prepare query statement
-    $stmt = $this->conn->prepare($query);
- 
-    // execute query
-    $stmt->execute();
- 
-    return $stmt;
-}
 
 function executeCountQuery($sql){
  
@@ -119,8 +101,6 @@ function validate() {
  
         
        
-        // prepare query
-        // $stmt = $this->conn->prepare($query);
         
         $this->lastmodified = gmdate('Y-m-d h:i:s', time());
         // sanitize
@@ -131,14 +111,14 @@ function validate() {
         $this->currency=htmlspecialchars(strip_tags($this->currency));
         
         
-        $sql = "UPDATE sellorders SET qty=". $this->qty.", price=". $this->price .",currency='". $this->currency.
+        $sql = "UPDATE ". $this->table_name ." SET qty=". $this->qty.", price=". $this->price .",currency='". $this->currency.
         "',paymentmethod='". $this->paymentmethod."',lastmodified='". $this->lastmodified."' where 
         id= " . $this->id ."" ;
     
        echo $sql;
 
        $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . 
-       $this->coinsn ." and status=1 and id=". $this->id;
+       $this->coinsn ." and id=". $this->id;
 
        $openSellOrderCount = $this->executeCountQuery($countquery);
        // $this->qty =0;

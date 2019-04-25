@@ -32,7 +32,7 @@ function authenticate($ticket, $raidanum) {
     $ticketurl = getRaidaUrl($raidanum) . "hints?rn=" . $ticket . "";
     $response = executeCurl($ticketurl);
     $reply = explode(":", $response);
-    echo $response;
+    // echo $response;
     //if(reply[0])
     if($reply[0]>0) {
        return array(
@@ -40,8 +40,13 @@ function authenticate($ticket, $raidanum) {
             "sn" => $reply[0]
        );
     }
-    else
-        return false;
+    else {
+        return array(
+            "result" => false,
+            "sn" => $reply[0]
+       );
+
+    }
     
 }
 

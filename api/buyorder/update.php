@@ -11,38 +11,40 @@ error_reporting(E_ALL);
 
 // include database and object files
 include_once '../../config/database.php';
-include_once '../../objects/sellorder.php';
-include_once '../../objects/user.php';
+include_once '../../objects/buyorder.php';
 include_once '../../middleware/authenticate.php';
-include_once '../../test.php';
 
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
 
-$ticket = getTestTicket();
+$ticket= $_GET['ticket'];
+$raida = $_GET['raida'];
 
-$authresponse = authenticate(6300997, $ticket["ticket"],0);
+$qty = $_GET['qty'];
+$price = $_GET['price'];
+$currency = $_GET['currency'];
+$paymentmethod =$_GET['paymentmethod'];
+$id= $_GET['id'];
+
+
+$authresponse = authenticate($ticket,$raida);
 //echo json_encode($ticket);
-echo json_encode($authresponse);
 
-if($authresponse) {
-    //echo json_encode('test');
+if($authresponse["result"]) {
     
-    $sellorder = new SellOrder($db);
-    $sellorder->id=3;
-    $sellorder->coinsn =2;
-    $sellorder->qty='50000';
-    $sellorder->price='0.02';
-    $sellorder->currency = "USDD";
-    $sellorder->created = "";
-    $sellorder->status = 1;
-    $sellorder ->paymentmethod = "Paypal";
+    $coinsn=$authresponse["sn"];
+    $buyorder = new BuyOrder($db);
+    $buyorder->id=$id;
+    $buyorder->coinsn =$coinsn;
+    $buyorder->qty=$qty;
+    $buyorder->price=$price;
+    $buyorder->currency = $currency;
+    $buyorder ->paymentmethod = $paymentmethod;
 
-    if($sellorder->update()) {
+    if($buyorder->update()) {
         http_response_code(200);
-    // show products data in json format
-        echo json_encode("Updated the record ");
+        echo json_encode("Updated the Buy Order ");
     }
     else {
         http_response_code(401);
@@ -52,7 +54,7 @@ if($authresponse) {
 else {
     http_response_code(401);
  
-    echo json_encode("Error--");
+    echo json_encode("Unauthorised");
 
 }
 
