@@ -20,7 +20,6 @@ include_once '../../test.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$ticket = getTestTicket();
 $ticket= $_GET['ticket'];
 $raida = $_GET['raida'];
 $qty = $_GET['qty'];

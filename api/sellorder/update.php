@@ -24,7 +24,6 @@ $ticket = getTestTicket();
 
 $authresponse = authenticate(6300997, $ticket["ticket"],0);
 //echo json_encode($ticket);
-echo json_encode($authresponse);
 
 if($authresponse) {
     //echo json_encode('test');

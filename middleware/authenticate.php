@@ -1,6 +1,5 @@
 <?php
 
-include_once('../test.php');
 
 function getRaidaUrl($raidanum) {
  return "https://RAIDA".$raidanum.".CloudCoin.Global/service/";
@@ -32,7 +31,7 @@ function authenticate($ticket, $raidanum) {
     $ticketurl = getRaidaUrl($raidanum) . "hints?rn=" . $ticket . "";
     $response = executeCurl($ticketurl);
     $reply = explode(":", $response);
-    // echo $response;
+    echo $response;
     //if(reply[0])
     if($reply[0]>0) {
        return array(

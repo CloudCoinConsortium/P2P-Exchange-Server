@@ -29,7 +29,6 @@ $id= $_GET['id'];
 
 
 $authresponse = authenticate($ticket,$raida);
-//echo json_encode($ticket);
 
 if($authresponse["result"]) {
     
@@ -44,17 +43,17 @@ if($authresponse["result"]) {
 
     if($buyorder->update()) {
         http_response_code(200);
-        echo json_encode("Updated the Buy Order ");
+        echo json_encode(array("message" => "Updated Buy Order successfully"));
     }
     else {
         http_response_code(401);
-        echo json_encode("Error Updating Sell Order.");
+        echo json_encode(array("message" => "Error Updating Buy Order"));
     }
 }
 else {
     http_response_code(401);
  
-    echo json_encode("Unauthorised");
+    echo json_encode(array("message" => "Unauthorised."));
 
 }
 

@@ -11,48 +11,45 @@ error_reporting(E_ALL);
 
 // include database and object files
 include_once '../../config/database.php';
-include_once '../../objects/sellorder.php';
-include_once '../../objects/user.php';
+include_once '../../objects/buyorder.php';
 include_once '../../middleware/authenticate.php';
-include_once '../../test.php';
 
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
 
-$ticket = getTestTicket();
 
-$authresponse = authenticate(6300997, $ticket["ticket"],0);
+$ticket= $_GET['ticket'];
+$raida = $_GET['raida'];
+$id= $_GET['id'];
+
+
+$authresponse = authenticate($ticket,$raida);
 //echo json_encode($ticket);
-echo json_encode($authresponse);
 
-if($authresponse) {
+
+if($authresponse["result"]) {
     //echo json_encode('test');
+    $coinsn=$authresponse["sn"];
     
-    $sellorder = new SellOrder($db);
-    $sellorder->id=3;
-    $sellorder->coinsn =3;
-    $sellorder->qty='50000';
-    $sellorder->price='0.02';
-    $sellorder->currency = "USDD";
-    $sellorder->created = "";
-    $sellorder->status = 1;
-    $sellorder ->paymentmethod = "Paypal";
+    $buyorder = new BuyOrder($db);
+    $buyorder->id=$id;
+    $buyorder->coinsn = $coinsn;
 
-    if($sellorder->delete()) {
+    if($buyorder->delete()) {
         http_response_code(200);
     // show products data in json format
-        echo json_encode("Deleted the Sell Order");
+        echo json_encode(array("message" => "Deleted the Buy Order"));
     }
     else {
         http_response_code(401);
-        echo json_encode("Error Deleting Sell Order.");
+        echo json_encode(array("message" => "Error Deleting the Buy Order"));
     }
 }
 else {
     http_response_code(401);
  
-    echo json_encode("Error--");
+    echo json_encode(array("message" => "Unauthorised."));
 
 }
 

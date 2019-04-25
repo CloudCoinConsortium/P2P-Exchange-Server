@@ -92,7 +92,7 @@ else{
  
     // tell the user no products found
     echo json_encode(
-        array("message" => "No Buy Orders found.", "authresponse" => $authresponse)
+        array("message" => "No Buy Orders found.")
     );
 }
 }

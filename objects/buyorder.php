@@ -30,7 +30,7 @@ function executeCountQuery($sql){
     //echo $result[0];
 
     $data = $result->fetch(PDO::FETCH_BOTH);
-print_r($data);
+    //print_r($data);
     return $data[0];
 }
 
@@ -54,10 +54,6 @@ function validate() {
  
         
         // query to insert record
-        $query = "INSERT INTO
-                    " . $this->table_name . "
-                SET
-                    coinsn=:coinsn, email=:email, dateofjoining=:dateofjoining,username=:username";
      
         // prepare query
         // $stmt = $this->conn->prepare($query);
@@ -71,22 +67,23 @@ function validate() {
         $this->currency=htmlspecialchars(strip_tags($this->currency));
         
         
-        $sql = "INSERT INTO sellorders (coinsn, qty, price,currency, dateposted,paymentmethod,status,lastmodified)
-        VALUES ( " . $this->coinsn .",'". $this->qty ."','". $this->price ."','". $this->currency. "','".
-         $this->dateposted. "','". $this->paymentmethod . "',1,'". $this->dateposted ."')" ;
+        $sql = "INSERT INTO buyorders (coinsn, qty, price,currency, dateposted,paymentmethod,lastmodified)
+        VALUES (" . $this->coinsn .",'". $this->qty ."','". $this->price ."','". $this->currency. "','".
+         $this->dateposted. "','". $this->paymentmethod . "','". $this->dateposted ."')" ;
     
-       //echo $sql;
+       echo $sql;
 
-       $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . $this->coinsn ." and status=1";
+       $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . $this->coinsn ."";
 
-       $openSellOrderCount = $this->executeCountQuery($countquery);
+       //$openSellOrderCount = $this->executeCountQuery($countquery);
        // $this->qty =0;
        if(!$this->validate()) {
         return false;
        }
-       if($openSellOrderCount > 0) {
-           return false;
-       }
+       echo "Validate true";
+    //    if($openSellOrderCount > 0) {
+    //        return false;
+    //    }
 
         $result = $this->conn->query($sql);
         if($result){
@@ -99,9 +96,6 @@ function validate() {
 
     function update(){
  
-        
-       
-        
         $this->lastmodified = gmdate('Y-m-d h:i:s', time());
         // sanitize
         $this->coinsn=htmlspecialchars(strip_tags($this->coinsn));
@@ -115,8 +109,6 @@ function validate() {
         "',paymentmethod='". $this->paymentmethod."',lastmodified='". $this->lastmodified."' where 
         id= " . $this->id ."" ;
     
-       echo $sql;
-
        $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . 
        $this->coinsn ." and id=". $this->id;
 
@@ -150,19 +142,15 @@ function validate() {
         $this->id=htmlspecialchars(strip_tags($this->id));
         
         
-        $sql = "delete from sellorders  where id= " . $this->id  ;
+        $sql = "delete from ". $this->table_name."  where id= " . $this->id  ;
     
-       echo $sql;
-
+       
        $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . 
-       $this->coinsn ." and status=1 and id=". $this->id;
-        echo $countquery;
-       $openSellOrderCount = $this->executeCountQuery($countquery);
+       $this->coinsn ." and id=". $this->id;
+       $openBuyOrderCount = $this->executeCountQuery($countquery);
        // $this->qty =0;
-       if(!$this->validate()) {
-        return false;
-       }
-       if($openSellOrderCount == 0) {
+      
+       if($openBuyOrderCount == 0) {
            return false;
        }
 
