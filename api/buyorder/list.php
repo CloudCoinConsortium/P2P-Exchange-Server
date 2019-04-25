@@ -2,22 +2,33 @@
 // required headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
- 
+
 // database connection will be here
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // include database and object files
 include_once '../../config/database.php';
-include_once '../../objects/sellorder.php';
+include_once '../../objects/buyorder.php';
 include_once '../../middleware/authenticate.php';
 include_once '../../test.php';
+
+ 
 
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
 
-$ticket = getTestTicket();
+// $ticket = getTestTicket();
 
-$authresponse = authenticate($ticket["ticket"],0);
+$ticket= $_GET['ticket'];
+$raida = $_GET['raida'];
+
+///echo $ticket;
+
+$authresponse = authenticate($ticket,$raida);
+
 $opt= $_GET['opt'];
 
 $offset= $_GET['offset'];
@@ -29,23 +40,21 @@ $offset= $_GET['offset'];
     if($pageSize == null) {
         $pageSize = 20;
     }
-if($authresponse) {
+if($authresponse["result"]) {
     
     // initialize object
-$sellorder = new SellOrder($db);
- 
-// read products will be here
+$buyorder = new BuyOrder($db);
+$sn = $authresponse["sn"];
 
-// query products
-$stmt = $sellorder->readSellOrders($offset, $pageSize);
+// query buy orders
+$stmt = $buyorder->readBuyOrders($offset, $pageSize,$sn,$opt);
 $num = $stmt->rowCount();
-//$sql = readsql();
 // check if more than 0 record found
 if($num>0){
  
     // products array
-    $products_arr=array();
-    $products_arr["records"]=array();
+    $buyorder_arr=array();
+    $buyorder_arr["records"]=array();
  
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -56,7 +65,7 @@ if($num>0){
         // just $name only
         extract($row);
  
-        $product_item=array(
+        $buyorder_item=array(
             "RecordId" => $id,
             "uName" => $name,
             "Quantity" => $qty,
@@ -67,14 +76,14 @@ if($num>0){
         );
  
 
-        array_push($products_arr["records"], $product_item);
+        array_push($buyorder_arr["records"], $buyorder_item);
     }
  
     // set response code - 200 OK
     http_response_code(200);
  
     // show products data in json format
-    echo json_encode($products_arr);
+    echo json_encode($buyorder_arr);
 }
 else{
  
@@ -83,7 +92,7 @@ else{
  
     // tell the user no products found
     echo json_encode(
-        array("message" => "No Sell Orders found.", "authresponse" => $authresponse)
+        array("message" => "No Buy Orders found.", "authresponse" => $authresponse)
     );
 }
 }

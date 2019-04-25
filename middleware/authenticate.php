@@ -26,15 +26,20 @@ function executeCurl($url) {
     return $data;
 }
 
-function authenticate($sn, $ticket, $raidanum) {
-    $obj = getTestTicket();
+function authenticate($ticket, $raidanum) {
+    //$obj = getTestTicket();
     
-    $ticketurl = getRaidaUrl($raidanum) . "hints?rn=" . $obj["ticket"] . "";
+    $ticketurl = getRaidaUrl($raidanum) . "hints?rn=" . $ticket . "";
     $response = executeCurl($ticketurl);
     $reply = explode(":", $response);
+    echo $response;
     //if(reply[0])
-    if($reply[0]>0) 
-        return true;
+    if($reply[0]>0) {
+       return array(
+            "result" => true,
+            "sn" => $reply[0]
+       );
+    }
     else
         return false;
     
