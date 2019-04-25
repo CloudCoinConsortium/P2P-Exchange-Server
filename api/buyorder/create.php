@@ -26,10 +26,14 @@ $qty = $_GET['qty'];
 $price = $_GET['price'];
 $currency = $_GET['currency'];
 $paymentmethod =$_GET['paymentmethod'];
+$sellorderid= $_GET['sellorderid'];
+
+if($sellorderid == null)
+    $sellorderid = 0;
 
 $authresponse = authenticate( $ticket,$raida);
 //echo json_encode($ticket);
-echo json_encode($authresponse);
+//echo json_encode($authresponse);
 
 if($authresponse["result"]) {
     //echo json_encode('test');
@@ -42,15 +46,15 @@ if($authresponse["result"]) {
     $buyorder->created = "";
     $buyorder->status = 1;
     $buyorder->paymentmethod = $paymentmethod;
-
+    $buyorder->sellorderid = $sellorderid;
     if($buyorder->create()) {
         http_response_code(200);
     // show products data in json format
-        echo json_encode("Added New Buy Order ");
+        echo json_encode(array("message" => "Added Buy Order"));
     }
     else {
         http_response_code(403);
-        echo json_encode("Error Creating Buy Order.");
+        echo json_encode(array("message" => "Error Creating Buy Order"));
   
     }
 }

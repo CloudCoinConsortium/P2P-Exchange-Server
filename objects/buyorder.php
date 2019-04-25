@@ -65,13 +65,14 @@ function validate() {
         $this->price=htmlspecialchars(strip_tags($this->price));
         $this->paymentmethod=htmlspecialchars(strip_tags($this->paymentmethod));
         $this->currency=htmlspecialchars(strip_tags($this->currency));
+        $this->sellorderid=htmlspecialchars(strip_tags($this->sellorderid));
         
         
-        $sql = "INSERT INTO buyorders (coinsn, qty, price,currency, dateposted,paymentmethod,lastmodified)
+        $sql = "INSERT INTO buyorders (coinsn, qty, price,currency, dateposted,paymentmethod,lastmodified,sellorderid)
         VALUES (" . $this->coinsn .",'". $this->qty ."','". $this->price ."','". $this->currency. "','".
-         $this->dateposted. "','". $this->paymentmethod . "','". $this->dateposted ."')" ;
+         $this->dateposted. "','". $this->paymentmethod . "','". $this->dateposted. "',". $this->sellorderid .")" ;
     
-       echo $sql;
+       // echo $sql;
 
        $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . $this->coinsn ."";
 
@@ -80,7 +81,6 @@ function validate() {
        if(!$this->validate()) {
         return false;
        }
-       echo "Validate true";
     //    if($openSellOrderCount > 0) {
     //        return false;
     //    }
