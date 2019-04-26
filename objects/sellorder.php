@@ -134,7 +134,7 @@ function validate() {
         "',paymentmethod='". $this->paymentmethod."',lastmodified='". $this->lastmodified."' where 
         id= " . $this->id ."" ;
     
-       echo $sql;
+       // echo $sql;
 
        $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . 
        $this->coinsn ." and status=1 and id=". $this->id;

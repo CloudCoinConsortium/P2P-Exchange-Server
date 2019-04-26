@@ -20,38 +20,45 @@ include_once '../../test.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$ticket = getTestTicket();
+$ticket= $_GET['ticket'];
+$raida = $_GET['raida'];
 
-$authresponse = authenticate(6300997, $ticket["ticket"],0);
+$qty = $_GET['qty'];
+$price = $_GET['price'];
+$currency = $_GET['currency'];
+$paymentmethod =$_GET['paymentmethod'];
+$id= $_GET['id'];
+
+$authresponse = authenticate($ticket,$raida);
 //echo json_encode($ticket);
 
-if($authresponse) {
+if($authresponse["result"]) {
     //echo json_encode('test');
     
     $sellorder = new SellOrder($db);
-    $sellorder->id=3;
-    $sellorder->coinsn =2;
-    $sellorder->qty='50000';
-    $sellorder->price='0.02';
-    $sellorder->currency = "USDD";
+    $sellorder->id=$id;
+    $sellorder->coinsn = $authresponse["sn"];
+    $sellorder->qty=$qty;
+    $sellorder->price=$price;
+    $sellorder->currency = $currency;
     $sellorder->created = "";
     $sellorder->status = 1;
-    $sellorder ->paymentmethod = "Paypal";
+    $sellorder ->paymentmethod = $paymentmethod;
 
     if($sellorder->update()) {
         http_response_code(200);
     // show products data in json format
-        echo json_encode("Updated the record ");
+        echo json_encode(array("message" => "Updated Sell Order successfully"));
     }
     else {
         http_response_code(401);
-        echo json_encode("Error Updating Sell Order.");
+        echo json_encode(array("message" => "Error updating Sell Order"));
     }
 }
 else {
     http_response_code(401);
  
-    echo json_encode("Error--");
+    echo json_encode(array("message" => "Unauthorised Successfully"));
 
 }
 
