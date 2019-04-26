@@ -20,41 +20,42 @@ include_once '../../test.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$ticket = getTestTicket();
+$ticket= $_GET['ticket'];
+$raida = $_GET['raida'];
+$qty = $_GET['qty'];
+$price = $_GET['price'];
+$currency = $_GET['currency'];
+$paymentmethod =$_GET['paymentmethod'];
 
-$authresponse = authenticate(6300997, $ticket["ticket"],0);
-//echo json_encode($ticket);
-echo json_encode($authresponse);
-echo json_encode('test');
+$authresponse = authenticate($ticket,$raida);
 
-if($authresponse) {
-    //echo json_encode('test');
+// echo json_decode( $authresponse);
+
+if($authresponse["result"]) {
     
     $sellorder = new SellOrder($db);
-    $sellorder->coinsn =3;
-    $sellorder->qty='5000';
-    $sellorder->price='0.01';
-    $sellorder->currency = "USD";
+    $sellorder->coinsn =$authresponse["sn"];
+    $sellorder->qty=$qty;
+    $sellorder->price=$price;
+    $sellorder->currency = $currency;
     $sellorder->created = "";
     $sellorder->status = 1;
-    $sellorder ->paymentmethod = "Paypal";
+    $sellorder ->paymentmethod = $paymentmethod;
 
     if($sellorder->create()) {
         http_response_code(200);
     // show products data in json format
-        echo json_encode("Added record ");
+        echo json_encode(array("message" => "Created Sell Order Successfully"));
     }
     else {
-        echo json_encode("Error Creating user.");
+        echo json_encode(array("message" => "Error Creating Sell Order"));
   
     }
 }
 else {
     http_response_code(401);
- 
     // show products data in json format
-    echo json_encode("Error--");
-
+    echo json_encode(array("message" => "Unauthorised Request"));
 }
 
 ?>
