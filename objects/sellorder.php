@@ -47,7 +47,7 @@ function executeCountQuery($sql){
     //echo $result[0];
 
     $data = $result->fetch(PDO::FETCH_BOTH);
-print_r($data);
+    // print_r($data);
     return $data[0];
 }
 
@@ -195,16 +195,27 @@ function validate() {
     }
 
     
-function readSellOrders($offset,$pageSize){
+function readSellOrders($offset,$pageSize,$sn,$opt){
  
     // select all query
-    $query = "SELECT
-                c.id,u.username as name, c.qty, c.price, c.currency, c.dateposted, c.paymentmethod
-            FROM
-                " . $this->table_name . " c,users u where c.coinsn=u.coinsn
-            ORDER BY
-                c.dateposted DESC limit ". $offset . "," . $pageSize;
- 
+    
+                if($opt== "all") {
+                    $query = "SELECT
+                    c.id,u.username as name, c.qty, c.price, c.currency, c.dateposted, c.paymentmethod
+                FROM
+                    " . $this->table_name . " c,users u where c.coinsn=u.coinsn
+                ORDER BY
+                    c.dateposted DESC limit ". $offset . "," . $pageSize;
+                }
+                else {
+                    $query = "SELECT
+                    c.id,u.username as name, c.qty, c.price, c.currency, c.dateposted, c.paymentmethod
+                FROM
+                    " . $this->table_name . " c,users u where c.coinsn=u.coinsn and c.coinsn=". $sn."
+                ORDER BY
+                    c.dateposted DESC limit ". $offset . "," . $pageSize;
+            
+                }
     // prepare query statement
     $stmt = $this->conn->prepare($query);
  

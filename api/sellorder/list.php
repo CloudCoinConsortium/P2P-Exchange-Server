@@ -15,9 +15,10 @@ include_once '../../test.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$ticket = getTestTicket();
+$ticket= $_GET['ticket'];
+$raida = $_GET['raida'];
 
-$authresponse = authenticate($ticket["ticket"],0);
+$authresponse = authenticate($ticket,$raida);
 $opt= $_GET['opt'];
 
 $offset= $_GET['offset'];
@@ -29,15 +30,16 @@ $offset= $_GET['offset'];
     if($pageSize == null) {
         $pageSize = 20;
     }
-if($authresponse) {
+if($authresponse["result"]) {
     
     // initialize object
 $sellorder = new SellOrder($db);
- 
+$sn = $authresponse["sn"];
+
 // read products will be here
 
 // query products
-$stmt = $sellorder->readSellOrders($offset, $pageSize);
+$stmt = $sellorder->readSellOrders($offset, $pageSize, $sn, $opt);
 $num = $stmt->rowCount();
 //$sql = readsql();
 // check if more than 0 record found
