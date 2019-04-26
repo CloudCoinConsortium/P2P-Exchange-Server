@@ -171,16 +171,14 @@ function validate() {
         
         $sql = "delete from sellorders  where id= " . $this->id  ;
     
-       echo $sql;
+       // echo $sql;
 
        $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . 
        $this->coinsn ." and status=1 and id=". $this->id;
-        echo $countquery;
+      //  echo $countquery;
        $openSellOrderCount = $this->executeCountQuery($countquery);
        // $this->qty =0;
-       if(!$this->validate()) {
-        return false;
-       }
+       
        if($openSellOrderCount == 0) {
            return false;
        }
