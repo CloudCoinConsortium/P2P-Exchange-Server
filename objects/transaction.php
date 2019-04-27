@@ -179,7 +179,8 @@ function getTransactions($offset,$pageSize,$sn,$opt){
     // select all query
     if($opt== "all") {
         $query = "SELECT
-        a.id,b.username as seller, c.username as buyer, a.qty, a.price, a.currency, a.transactiondate, a.paymentmethod
+        a.id,b.username as seller, c.username as buyer, a.qty, a.price, a.currency, a.transactiondate, a.paymentmethod, 
+        a.buyercomment,a.sellercomment, a.buyerrating,a.sellerrating
     FROM
         " . $this->table_name . " a,users b,users c where a.sellerid=b.coinsn and a.buyerid=c.coinsn
     ORDER BY
@@ -187,7 +188,8 @@ function getTransactions($offset,$pageSize,$sn,$opt){
     }
     else {
         $query = "SELECT
-        a.id,b.username as seller, c.username as buyer, a.qty, a.price, a.currency, a.transactiondate, a.paymentmethod
+        a.id,b.username as seller, c.username as buyer, a.qty, a.price, a.currency, a.transactiondate, a.paymentmethod,
+        a.buyercomment,a.sellercomment,a.buyerrating,a.sellerrating
     FROM
         " . $this->table_name . " a,users b, users c where a.sellerid=b.coinsn and a.buyerid=c.coinsn and (a.sellerid=". 
         $sn." or a.buyerid=". $sn .")
@@ -195,7 +197,6 @@ function getTransactions($offset,$pageSize,$sn,$opt){
         a.transactiondate DESC limit ". $offset . "," . $pageSize;
     }
  
-    echo $query;
     // prepare query statement
     $stmt = $this->conn->prepare($query);
  

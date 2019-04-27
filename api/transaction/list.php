@@ -72,7 +72,11 @@ if($num>0){
             "Currency" => $currency,
             "Dated" => $transactiondate,
             "PayBy" => $paymentmethod,
-            "BuyerName" => $buyer
+            "BuyerName" => $buyer,
+            "BuyerComment" =>$buyercomment,
+            "SellerComment" =>$sellercomment,
+            "BuyerRating" =>$buyerrating,
+            "SellerRating" =>$sellerrating
         );
  
 
