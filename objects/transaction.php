@@ -25,6 +25,7 @@ class Transaction{
     public $lastmodified;
     public $currency;
     public $paymentmethod;
+    public $transactiondate;
 
     // constructor with $db as database connection
     public function __construct($db){
@@ -68,21 +69,37 @@ function validate() {
         // prepare query
         // $stmt = $this->conn->prepare($query);
         
-        $this->dateposted = gmdate('Y-m-d h:i:s', time());
+        $this->transactiondate = gmdate('Y-m-d h:i:s', time());
         // sanitize
         $this->coinsn=htmlspecialchars(strip_tags($this->coinsn));
+        $this->sellerid=htmlspecialchars(strip_tags($this->sellerid));
+        $this->buyerid=htmlspecialchars(strip_tags($this->buyerid));
+        $this->transactiondate=htmlspecialchars(strip_tags($this->transactiondate));
+        $this->transactionno=htmlspecialchars(strip_tags($this->transactionno));
+        $this->recieptno=htmlspecialchars(strip_tags($this->recieptno));
+        
+        $this->buyercomment=htmlspecialchars(strip_tags($this->buyercomment));
+        $this->sellercomment=htmlspecialchars(strip_tags($this->sellercomment));
+        $this->buyerrating=htmlspecialchars(strip_tags($this->buyerrating));
+        $this->sellerrating=htmlspecialchars(strip_tags($this->sellerrating));
+        
+
         $this->qty=htmlspecialchars(strip_tags($this->qty));
         $this->price=htmlspecialchars(strip_tags($this->price));
         $this->paymentmethod=htmlspecialchars(strip_tags($this->paymentmethod));
         $this->currency=htmlspecialchars(strip_tags($this->currency));
         $this->sellorderid=htmlspecialchars(strip_tags($this->sellorderid));
+        $this->buyorderid=htmlspecialchars(strip_tags($this->buyorderid));
         
         
-        $sql = "INSERT INTO buyorders (coinsn, qty, price,currency, dateposted,paymentmethod,lastmodified,sellorderid)
-        VALUES (" . $this->coinsn .",'". $this->qty ."','". $this->price ."','". $this->currency. "','".
-         $this->dateposted. "','". $this->paymentmethod . "','". $this->dateposted. "',". $this->sellorderid .")" ;
+        $sql = "INSERT INTO transactions (sellorderid,buyorderid,buyerid,sellerid, qty, price,currency, 
+        paymentmethod,transactiondate,lastmodified, buyerrating,sellerrating,buyercomment,sellercomment)
+        VALUES ('" . $this->sellorderid ."','". $this->buyorderid."','" .$this->buyerid."','". 
+        $this->sellerid ."','" . $this->qty ."','". $this->price ."','". $this->currency. "','". $this->paymentmethod. 
+        $this->transactiondate ."','" . $this->transaactiondate ."','". $this->buyerrating ."','". $this->sellerrating. 
+        $this->buyercomment ."','" . $this->sellercomment ."')" ;
     
-       // echo $sql;
+       echo $sql;
 
        $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . $this->coinsn ."";
 
