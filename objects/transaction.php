@@ -190,8 +190,40 @@ function validate() {
          
     }
 
+    function rate($rating,$comment,$id) {
+        $buyercount = $this->executeCountQuery("select count(*) from transactions where buyerid=".$this->coinsn." and id=".$id);
+        $sellercount = $this->executeCountQuery("select count(*) from transactions where sellerid=".$this->coinsn." and id=".$id);
+        
+        if($buyercount > 0) {
+            $updatesql= "update transactions set buyerrating=".$rating.", buyercomment ='".$comment."' where id=".$id;
+            $result = $this->conn->query($updatesql);
+            if($result){
+                return true;
+            }
+            else {
+                return false;
+            }
     
-function getTransactions($offset,$pageSize,$sn,$opt){
+        }
+
+        if($sellercount > 0) {
+            $updatesql= "update transactions set sellerrating=".$rating.", sellercomment ='".$comment."' where id=".$id;
+            $result = $this->conn->query($updatesql);
+            if($result){
+                return true;
+            }
+            else {
+                return false;
+            }
+    
+        }
+
+        return false;
+    }
+
+   
+    
+    function getTransactions($offset,$pageSize,$sn,$opt){
  
     // select all query
     if($opt== "all") {

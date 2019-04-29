@@ -65,7 +65,7 @@ if($authresponse["result"]) {
     if($transaction->create()) {
         http_response_code(200);
     // show products data in json format
-        echo json_encode(array("message" => "Posted Transaction Successfully"));
+        echo json_encode(array("message" => "Transaction Posted Successfully"));
     }
     else {
         echo json_encode(array("message" => "Error Posting transaction"));
