@@ -3,6 +3,7 @@
 
 
 <?php
+<<<<<<< HEAD
 echo "Hello World";
 
 // Strings can either be passed individually as multiple arguments or
@@ -20,3 +21,7 @@ echo 'This ' . 'string ' . 'was ' . 'made ' . 'with concatenation.' . "\n";
 
 echo $some_var ? 'true': 'false'; // changing the statement around
 ?>
+=======
+echo "Hello World navraj";
+    ?>
+>>>>>>> 3711140d0872129c4a9796d20ca497567321f0e9
