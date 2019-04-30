@@ -2,10 +2,10 @@
 class Database{
  
     // specify your own database credentials
-    private $host = "localhost";
-    private $db_name = "exchange";
-    private $username = "root";
-    private $password = "";
+    private $host = "204.11.58.166";
+    private $db_name = "navraggl_exchangecc";
+    private $username = "exchangeprg";
+    private $password = "54\$nM3mw";
     public $conn;
  
     // get the database connection

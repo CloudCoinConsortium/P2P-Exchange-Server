@@ -7,15 +7,6 @@ class SellOrder{
  
     // object properties
     public $id;
-<<<<<<< HEAD
-    public $name;
-    public $description;
-    public $price;
-    public $category_id;
-    public $category_name;
-    public $created;
- 
-=======
     public $coinsn;
     public $currency;
     public $price;
@@ -24,7 +15,6 @@ class SellOrder{
     public $created;
     public $status;
     public $lastmodified;
->>>>>>> 3711140d0872129c4a9796d20ca497567321f0e9
     // constructor with $db as database connection
     public function __construct($db){
         $this->conn = $db;
