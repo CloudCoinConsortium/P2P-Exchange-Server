@@ -20,12 +20,13 @@ include_once '../../test.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$ticket = getTestTicket();
+$ticket= $_GET['ticket'];
+$raida = $_GET['raida'];
+$id= $_GET['id'];
 
-$authresponse = authenticate(6300997, $ticket["ticket"],0);
+$authresponse = authenticate($ticket,$raida);
+
 //echo json_encode($ticket);
-echo json_encode($authresponse);
-echo json_encode('test');
 
 if($authresponse) {
     //echo json_encode('test');
@@ -34,8 +35,8 @@ if($authresponse) {
     //echo json_encode("Added");
     $user = new User($db);
     $user->coinsn =2;
-    $user->username='navraj1';
-    $user->email='navraj1@outlook.com';
+    $user->username=$_GET['username'];
+    $user->email=$_GET['email'];
 
     //$result = $user.create();
     //echo json_encode("Added record 0");
