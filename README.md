@@ -2,14 +2,23 @@
 This server will allow the advanced client to connect and get trading data.
 
 [Create a New User](README.md#create-a-new-user)
+
 [Create a New Sell Order](README.md#create-a-new-sell-order)
+
 [Create a New Buy Order](README.md#create-a-new-buy-order)
+
 [List Buy Orders](README.md#list-buy-orders)
+
 [List Sell Orders](README.md#list-sell-orders)
+
 [Delete Buy Order](README.md#delete-buy-order)
+
 [Delete Sell Order](README.md#delete-sell-order)
+
 [Post a Transaction](README.md#post-a-transaction)
+
 [List Transactions](README.md#list-a-transaction)
+
 [Rate a Transaction](README.md#rate-a-transaction)
 
 
