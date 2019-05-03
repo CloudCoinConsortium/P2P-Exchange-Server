@@ -94,17 +94,18 @@ https://www.cloudcoin.exchange/api/users/create.php/?ticket=cb9db1c1b622bebde6ae
 ```
 Response
 ```json
-Success : Status Code : 200
-Response: {
-      “username”: “”,
-       “sn”: “”,
-        “dateofjoining”: “”,
-          “email”: “”
+{
+      "username": "",
+       "sn": "",
+        "dateofjoining": "",
+          "email": ""
 }
+```
 
-Failure : Status Code : 400
-Response: {
-     Message: “Error Message”
+```json
+
+{
+     "Message": "Error Message"
 }
 ```
 
