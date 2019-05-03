@@ -104,7 +104,23 @@ Sell Order id is the ID of the order against which buy order is being placed. if
 ```html
 https://www.cloudcoin.exchange/api/buyorder/create.php/?raida=0&ticket=6511a0cbb4c3d6576d62c8a51dc532187be49b5d0b00&qty=25000&price=0.035&currency=AUD&paymentmethod=Paypal&sellorderid=1
 ```
+```
+Success : Status Code : 200
+Response: {
+      “id”,
+      “buyordernumber”: “”,
+       “quantity”: “”,
+        “price”: “”,
+        “dateposted”: “”,
+         “currency”: “”
+}
 
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+
+```
 
 ## List Sell Orders
 Lists the Sell orders with offset and pagesizes. By defalt it shows sell orders posted by the current user.
