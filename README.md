@@ -23,15 +23,65 @@ This server will allow the advanced client to connect and get trading data.
 
 ## Database Scheema
 ```sql
-DROP TABLE IF EXISTS `exchange`.`users`;
-CREATE TABLE  `exchange`.`users` (
-  `coinsn` int(10) unsigned NOT NULL default '0',
+CREATE TABLE `users` (
+  `coinsn` int(10) unsigned NOT NULL DEFAULT '0',
   `username` varchar(16) NOT NULL,
   `email` varchar(60) NOT NULL,
   `dateofjoining` datetime NOT NULL,
-  PRIMARY KEY  (`coinsn`),
+  PRIMARY KEY (`coinsn`),
   UNIQUE KEY `UC_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `sellorders` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `coinsn` int(11) NOT NULL,
+  `qty` int(10) unsigned NOT NULL,
+  `price` decimal(8,2) NOT NULL,
+  `currency` varchar(10) NOT NULL DEFAULT 'USD',
+  `dateposted` datetime NOT NULL,
+  `paymentmethod` varchar(12) NOT NULL,
+  `status` int(10) unsigned NOT NULL DEFAULT '0',
+  `lastmodified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+
+
+TABLE `buyorders` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `coinsn` int(10) unsigned NOT NULL DEFAULT '0',
+  `qty` int(10) unsigned NOT NULL DEFAULT '0',
+  `price` decimal(10,2) NOT NULL,
+  `dateposted` datetime NOT NULL,
+  `currency` varchar(20) NOT NULL,
+  `sellorderid` int(10) unsigned DEFAULT '0',
+  `paymentmethod` varchar(100) NOT NULL,
+  `lastmodified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `transactions` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sellorderid` int(10) unsigned NOT NULL,
+  `buyerid` int(10) unsigned NOT NULL,
+  `sellerid` int(10) unsigned NOT NULL,
+  `qty` int(10) unsigned NOT NULL DEFAULT '0',
+  `price` decimal(10,2) NOT NULL,
+  `transactiondate` datetime NOT NULL,
+  `buyerrating` int(10) unsigned NOT NULL,
+  `sellerrating` int(10) unsigned NOT NULL,
+  `transactionnumber` varchar(20) NOT NULL,
+  `recieptnumber` varchar(20) NOT NULL,
+  `buyercomment` text NOT NULL,
+  `sellercomment` text NOT NULL,
+  `buyorderid` int(10) unsigned NOT NULL,
+  `currency` varchar(10) NOT NULL,
+  `paymentmethod` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+
 ```
 ## Create a New User
 This service allows a user to create or update their information. 
