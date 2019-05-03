@@ -21,7 +21,18 @@ This server will allow the advanced client to connect and get trading data.
 
 [Rate a Transaction](README.md#rate-a-transaction)
 
-
+## Database Scheema
+```sql
+DROP TABLE IF EXISTS `exchange`.`users`;
+CREATE TABLE  `exchange`.`users` (
+  `coinsn` int(10) unsigned NOT NULL default '0',
+  `username` varchar(16) NOT NULL,
+  `email` varchar(60) NOT NULL,
+  `dateofjoining` datetime NOT NULL,
+  PRIMARY KEY  (`coinsn`),
+  UNIQUE KEY `UC_username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+```
 ## Create a New User
 This service allows a user to create or update their information. 
 The ticket and RAIDA number are required to allow the user to establish their identity. The email and username is not required. 
@@ -31,6 +42,24 @@ Sample Get Request
 https://www.cloudcoin.exchange/api/users/create.php/?ticket=cb9db1c1b622bebde6ae7958c924f1fc9c7dec24cc00&raida=0&email=username@email.com&username=usernamevalue
 
 ```
+Response
+```javascript
+Success : Status Code : 200
+Response: {
+      “username”: “”,
+       “sn”: “”,
+        “dateofjoining”: “”,
+          “email”: “”
+}
+
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+```
+
+
+
 ## Create a New Sell Order 
 Advertises to others that the user wants to sell CloudCoins.
 
@@ -46,6 +75,25 @@ url: The location of the sales page that the seller is using (usually their loca
 
 ```html
 https://www.cloudcoin.exchange/api/sellorder/create.php/?raida=0&ticket=6511a0cbb4c3d6576d62c8a51dc532187be49b5d0b00&qty=25000&price=0.035&currency=AUD&paymentmethod=Paypal&url=http%3A%2F%2Fmyserver.com%2Findex.html%0D%0A
+```
+
+```
+Success : Status Code : 200
+Response: {
+      “id”,
+      “sellordernumber”: “”,
+       “quantity”: “”,
+        “price”: “”,
+        “dateposted”: “”,
+         “currency”: “”,
+         “paymentmethod”: “”
+}
+
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+
 ```
 
 ## Create New Buy Order
@@ -65,6 +113,23 @@ If the optional parameter opt=all is used then it shows all the sell orders. The
 ```html
 https://www.cloudcoin.exchange/api/sellorder/list.php/?offset=0&pagesize=10&opt=all&raida=0&ticket=6511a0cbb4c3d6576d62c8a51dc532187be49b5d0b00
 ```
+```
+Success : Status Code : 200
+Response: [{
+     “id”, “”,
+     “quantity”, “”,
+     “price”: “”,
+     “dateposted”: “”,
+     “currency”: “”,
+     “username”: “”
+}]
+
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+
+```
 
 
 ## List Buy Orders
@@ -73,6 +138,24 @@ If the optional parameter opt=all is used then it shows all the buy orders. The 
 
 ```html
 https://www.cloudcoin.exchange/api/buyorder/list.php/?offset=0&pagesize=10&opt=all&raida=0&ticket=6511a0cbb4c3d6576d62c8a51dc532187be49b5d0b00
+```
+```
+Success : Status Code : 200
+Response: [{
+     “id”, “”,
+     “quantity”, “”,
+     “price”: “”,
+     “dateposted”: “”,
+     “currency”: “”,
+     “username”: “”
+}]
+
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+
+
 ```
 
 
@@ -84,6 +167,26 @@ A sell order can only be deleted if its in Open state. That means if a transacti
 https://www.cloudcoin.exchange/api/sellorder/delete.php/?opt=all&raida=0&ticket=6511a0cbb4c3d6576d62c8a51dc532187be49b5d0b00&id=101
 ```
 
+```
+Success : Status Code : 200
+Response: {
+       “MESSAGE”: “Sell Order Deleted successfully”
+      “id”,
+      “sellordernumber”: “”,
+       “quantity”: “”,
+        “price”: “”,
+        “dateposted”: “”,
+         “currency”: “”,
+         “paymentmethod”: “”
+}
+
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+
+```
+
 
 ## Delete Buy Order
 A byu order can only be deleted if its in Open state. That means if a transaction has not been executed against the buy order it can be deleted. you can pass the id parameter to delete a buy order.
@@ -91,11 +194,47 @@ A byu order can only be deleted if its in Open state. That means if a transactio
 ```html
 https://www.cloudcoin.exchange/api/buyorder/delete.php/?opt=all&raida=0&ticket=6511a0cbb4c3d6576d62c8a51dc532187be49b5d0b00&id=101
 ```
+```
+Success : Status Code : 200
+Response: {
+       “MESSAGE”: “Buy Order Deleted successfully”
+      “id”,
+      “buyordernumber”: “”,
+       “quantity”: “”,
+        “price”: “”,
+        “dateposted”: “”,
+         “sellordernumber”: “”
+         “currency”: “”
+}
 
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+
+```
 ## Post a Transaction
 This will be plugged into the sellers webpage on their webserver. When someone buys, the page will post the transaction. 
 ```html
 https://www.cloudcoin.exchange/api/transaction/post.php/?raida=0&ticket=6511a0cbb4c3d6576d62c8a51dc532187be49b5d0b00&qty=25000&price=0.035&currency=AUD&paymentmethod=Paypal&sellorderid=1&buyorderid=2&buyerid=1&sellerid=2&buyercomment=buyercomment&sellercomment=sellercomment&buyerrating=3.0&sellerrating=4.0&transactionno=trnno&recieptno=recno
+```
+```
+Success : Status Code : 200
+Response: {
+      “id”,
+      “sellordernumber”: “”,
+       “quantity”: “”,
+        “price”: “”,
+        “dateposted”: “”,
+         “currency”: “”,
+         “paymentmethod”: “”
+}
+
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+
 ```
 
 ## List Transactions
@@ -103,6 +242,27 @@ The user can sell all the transactions that happened recently so that they can b
 
 ```html
 https://www.cloudcoin.exchange/api/transaction/list.php/?raida=0&ticket=6511a0cbb4c3d6576d62c8a51dc532187be49b5d0b00
+```
+```
+Success : Status Code : 200
+Response: [{
+     “id”, “”,
+      “buyerid”: “”,
+      “sellerid”: “”,
+     “quantity”, “”,
+     “price”: “”,
+     “dateposted”: “”,
+     “currency”: “”,
+     “Recieptnumber”: “”,
+      “buyorderid”: “”,
+      “sellorderid”:””
+}]
+
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+
 ```
 
 
@@ -113,7 +273,21 @@ Rate a transaction after its posted. It can be used for both seller and buyer. t
 ```html
 https://www.cloudcoin.exchange/api/transaction/post.php/?raida=0&ticket=6511a0cbb4c3d6576d62c8a51dc532187be49b5d0b00&rating=4.0&comment=comment
 ```
+```
+Success : Status Code : 200
+Response: [{
+“transactionid”: “”,
+      “rating”: “”,
+       “comment”: “”
+}]
 
+Failure : Status Code : 400
+Response: {
+     Message: “Error Message”
+}
+
+
+```
 
 
 
