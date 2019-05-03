@@ -2,6 +2,15 @@
 This server will allow the advanced client to connect and get trading data.
 
 [Create a New User](README.md#create-a-new-user)
+[Create a New Sell Order](README.md#create-a-new-sell-order)
+[Create a New Buy Order](README.md#create-a-new-buy-order)
+[List Buy Orders](README.md#list-buy-orders)
+[List Sell Orders](README.md#list-sell-orders)
+[Delete Buy Order](README.md#delete-buy-order)
+[Delete Sell Order](README.md#delete-sell-order)
+[Post a Transaction](README.md#post-a-transaction)
+[List Transactions](README.md#list-a-transaction)
+[Rate a Transaction](README.md#rate-a-transaction)
 
 
 ## Create a New User
@@ -40,7 +49,7 @@ https://www.cloudcoin.exchange/api/buyorder/create.php/?raida=0&ticket=6511a0cbb
 ```
 
 
-## Get Sell Orders List
+## List Sell Orders
 Lists the Sell orders with offset and pagesizes. By defalt it shows sell orders posted by the current user.
 If the optional parameter opt=all is used then it shows all the sell orders. The list is given in descending orders of sell orders timestamp.
 
@@ -49,7 +58,7 @@ https://www.cloudcoin.exchange/api/sellorder/list.php/?offset=0&pagesize=10&opt=
 ```
 
 
-## Get Buy Orders List
+## List Buy Orders
 Lists the Buy orders with offset and pagesizes. By defalt it shows buy orders posted by the current user.
 If the optional parameter opt=all is used then it shows all the buy orders. The list is given in descending orders of buy orders timestamp.
 
