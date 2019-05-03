@@ -1,7 +1,7 @@
 # P2P-Exchange-Server
 This server will allow the advanced client to connect and get trading data.
 
-[Create a New User(create-a-new-user/README.md)
+[Create a New User](README.md#create-a-new-user)
 
 
 ## Create a New User
