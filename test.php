@@ -1,8 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-
-include_once('./middleware/authenticate.php');
+//include_once('../middleware/authenticate.php');
 
 function getTicketUrl($nn,$sn,$an,$pan,$denomination) {
     return getRaidaUrl(0) . "get_ticket?nn=" .$nn. "&sn=".$sn. "&an=" .$an."&pan=".$pan."&denomination=".$denomination;

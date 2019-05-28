@@ -1,10 +1,8 @@
 <?php
-
-
 function getRaidaUrl($raidanum) {
- return "https://RAIDA".$raidanum.".CloudCoin.Global/service/";
+ //return "https://RAIDA".$raidanum.".CloudCoin.Global/service/";
+    return "https://".$raidanum.".CloudCoin.Global/service/";
 }
-
 function executeCurl($url) {
     $ch = curl_init();
      
@@ -19,7 +17,6 @@ function executeCurl($url) {
      
     //Execute the request.
     $data = curl_exec($ch);
-     
     //Close the cURL handle.
     curl_close($ch);
     return $data;
@@ -27,12 +24,9 @@ function executeCurl($url) {
 
 function authenticate($ticket, $raidanum) {
     //$obj = getTestTicket();
-    
     $ticketurl = getRaidaUrl($raidanum) . "hints?rn=" . $ticket . "";
     $response = executeCurl($ticketurl);
     $reply = explode(":", $response);
-    // echo $response;
-    //if(reply[0])
     if($reply[0]>0) {
        return array(
             "result" => true,

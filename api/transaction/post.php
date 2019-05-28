@@ -24,7 +24,7 @@ $qty = $_GET['qty'];
 $price = $_GET['price'];
 $currency = $_GET['currency'];
 $paymentmethod =$_GET['paymentmethod'];
-$transactionid =$_GET['sellorderid'];
+$sellorderid =$_GET['sellorderid'];
 $buyorderid =$_GET['buyorderid'];
 $buyerid =$_GET['buyerid'];
 $sellerid =$_GET['sellerid'];
@@ -34,8 +34,9 @@ $buyerrating =$_GET['buyerrating'];
 $sellerrating =$_GET['sellerrating'];
 $transactionno =$_GET['transactionno'];
 $recieptno =$_GET['recieptno'];
-
-
+$comment = $_GET['comment'];
+$rating = $_GET['rating'];
+$id = $_GET['id'];
 $authresponse = authenticate($ticket,$raida);
 
 // echo json_decode( $authresponse);
@@ -43,25 +44,34 @@ $authresponse = authenticate($ticket,$raida);
 if($authresponse["result"]) {
     
     $transaction = new Transaction($db);
-    $transaction->coinsn =$authresponse["sn"];
+    $transaction->coinsn = $authresponse["sn"];
     $transaction->qty=$qty;
     $transaction->price=$price;
     $transaction->currency = $currency;
-    $transaction ->paymentmethod = $paymentmethod;
+    $transaction->paymentmethod = $paymentmethod;
     $transaction->buyorderid=$buyorderid;
     $transaction->sellorderid=$sellorderid;
     $transaction->buyerid=$buyerid;
     $transaction->sellerid=$sellerid;
     $transaction->buyercomment=$buyercomment;
-    $transaction->sellercomment=$buyercomment;
+    $transaction->sellercomment=$sellercomment;
     $transaction->buyerrating=$buyerrating;
     $transaction->sellerrating=$sellerrating;
     $transaction->transactionno=$transactionno;
     $transaction->recieptno=$recieptno;
-    
-                    
-    
-    
+    $transaction->comment=$comment;
+    $transaction->rating=$rating;
+    $transaction->id=$id;
+    if(!empty($comment) && !empty($rating)){
+  if($transaction->rate($rating,$comment,$id)) {
+        http_response_code(200);
+        echo json_encode(array("message" => "Review Successfully posted"));
+    }
+    else {
+        echo json_encode(array("message" => "Error Review transaction"));
+    }
+
+    }else{
     if($transaction->create()) {
         http_response_code(200);
     // show products data in json format
@@ -69,8 +79,8 @@ if($authresponse["result"]) {
     }
     else {
         echo json_encode(array("message" => "Error Posting transaction"));
-  
     }
+}
 }
 else {
     http_response_code(401);

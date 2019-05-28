@@ -2,16 +2,13 @@
 // required headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
- 
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
-
-// database connection will be here
+ ini_set('display_errors', 1);
+ ini_set('display_startup_errors', 1);
+ error_reporting(E_ALL);
 
 // include database and object files
 include_once '../../config/database.php';
-include_once '../../objects/sellorder.php';
+#include_once '../../objects/sellorder.php';
 include_once '../../objects/user.php';
 include_once '../../middleware/authenticate.php';
 include_once '../../test.php';
@@ -20,45 +17,71 @@ include_once '../../test.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$ticket= $_GET['ticket'];
-$raida = $_GET['raida'];
-$id= $_GET['id'];
+$ticket= isset($_GET['ticket'])?$_GET['ticket']:"";
+$raida = isset($_GET['raida'])?$_GET['raida']:"";
+$id= isset($_GET['id'])?$_GET['id']:"";
 
 $authresponse = authenticate($ticket,$raida);
 
-//echo json_encode($ticket);
-
-if($authresponse) {
-    //echo json_encode('test');
-    
-    // show products data in json format
-    //echo json_encode("Added");
+if(!$authresponse["result"]) { //WN
+    $coinssn = $authresponse["sn"];
     $user = new User($db);
-    $user->coinsn =2;
-    $user->username=$_GET['username'];
-    $user->email=$_GET['email'];
+    $user->coinsn = $coinssn;
+    $user->email=isset($_GET['email'])?$_GET['email']:"";
+    $user->phone=isset($_GET['phone'])?$_GET['phone']:"";
+    $user->coinsn = "222"; // WN
+    if($user->validate()){
+        $chkExt = $user->user_exist();
+        $chkCount = $chkExt->rowCount();
+        $isNewUser = true;
+        $dbresult = false;
+        $isDuplicate = false;
+        if($chkCount>0){
+            $dbresult =  $user->update();
+            $isNewUser = false;
+        }else{
 
-    //$result = $user.create();
-    //echo json_encode("Added record 0");
-    // echo json_encode($user->username);
+        $chkExt = $user->user_duplicate();
+        $chkCount = $chkExt->rowCount();
+        if($chkCount<1){
+           $dbresult = $user->create();
+            }else{
+               $isDuplicate = true; 
+            }
+        }
 
-
-    if($user->create()) {
+    $messageResponse = "Something went wrong, please try again.";
+    if($dbresult==false && $isNewUser==true){
+         http_response_code(401);
+         if($isDuplicate){
+            $messageResponse = "Email Already exist.";
+         }else{
+        $messageResponse = "Error to creating new user.";
+        }
+    }elseif($dbresult==false && $isNewUser==false){
+         http_response_code(401);
+        $messageResponse = "Error in Update new user.";
+    }elseif($dbresult==true && $isNewUser==true){
         http_response_code(200);
-    // show products data in json format
-        echo json_encode("Added record ");
+        $messageResponse = "Added record.";
+    }elseif($dbresult==true && $isNewUser==false){
+        http_response_code(200);
+        $messageResponse = "Updated record.";
     }
-    else {
-        echo json_encode("Error Creating user.");
-  
+
+    }else{
+        http_response_code(401);
+        $messageResponse = "Invalid request.";
     }
+
+    
+    echo json_encode($messageResponse);
+
 }
 else {
     http_response_code(401);
- 
     // show products data in json format
-    echo json_encode("Error--");
-
+    echo json_encode("Unauthorised");
 }
 
 ?>

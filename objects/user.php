@@ -7,65 +7,140 @@ class User{
  
     // object properties
     public $coinsn;
-    public $username;
+    public $phone;
     public $email;
+    public $code_name;
     public $dateofjoining;
+    public $profile_img;
     
     // constructor with $db as database connection
     public function __construct($db){
         $this->conn = $db;
     }
 
+
+public function validate(){
+    if(empty($this->phone)){
+        return false;
+    }
+    if(empty($this->email)){
+        return false;
+    }
+
+    if(empty($this->coinsn)){
+        return false;
+    }
+    return true;
     // create product
+}
 function create(){
- 
-    // echo json_encode("here");
-    
     // query to insert record
-    $query = "INSERT INTO
+   /* $query = "INSERT INTO
                 " . $this->table_name . "
             SET
                 coinsn=:coinsn, email=:email, dateofjoining=:dateofjoining,username=:username";
- 
     // prepare query
     // $stmt = $this->conn->prepare($query);
-    
+    */
     $this->dateofjoining = gmdate('Y-m-d h:i:s', time());
     // sanitize
     $this->email=htmlspecialchars(strip_tags($this->email));
     $this->coinsn=htmlspecialchars(strip_tags($this->coinsn));
+    $this->phone=htmlspecialchars(strip_tags($this->phone));
+    $this->code_name=rand(9,99999);
+    $this->banned=0;
     $this->dateofjoining=htmlspecialchars(strip_tags($this->dateofjoining));
-    $this->username=htmlspecialchars(strip_tags($this->username));
+    //$this->username=htmlspecialchars(strip_tags($this->username));
     
-    $sql = "INSERT INTO users (coinsn, username, email,dateofjoining)
-    VALUES ( " . $this->coinsn .",'". $this->username ."','". $this->email ."','". $this->dateofjoining . "')" ;
-
-echo $sql;
-    // echo $sql;
-    // if (mysqli_query($conn, $sql)) {
-    //     echo "New record created successfully";
-    // } else {
-    //     echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-    // }
-    // // bind values
-    // $stmt->bindValue(":coinsn", $this->coinsn,PDO::PARAM_STR);
-    // $stmt->bindValue(":email", $this->email, PDO::PARAM_STR);
-    // $stmt->bindValue(":dateofjoining", $this->dateofjoining, PDO::PARAM_STR);
-    // $stmt->bindValue(":username", $this->username, PDO::PARAM_STR);
-    
-    // echo json_encode($stmt);
-    
+    $sql = "INSERT INTO users (coinsn, email, phone,code_name, banned, dateofjoining)
+    VALUES ( " . $this->coinsn .",'". $this->email ."','". $this->phone ."','".
+     $this->code_name."','". $this->banned."','".$this->dateofjoining . "')" ;
     // execute query
     $result = $this->conn->query($sql);
-    //echo $result;
+    //echo $sql;
     if($result){
         return true;
     }
- 
     return false;
      
 }
+
+function user_exist(){
+    // select all query
+     $query = "SELECT
+                c.coinsn,c.phone as phone, c.email, c.dateofjoining
+            FROM
+                " . $this->table_name . " c
+            where c.coinsn='".$this->coinsn."'";
+ 
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+ 
+    // execute query
+    $stmt->execute();
+    return $stmt;
+}
+
+function user_duplicate(){
+    // select all query
+     $query = "SELECT
+                c.coinsn,c.phone as phone, c.email, c.dateofjoining
+            FROM
+                " . $this->table_name . " c
+            where email='".$this->email."' and coinsn !='".$this->coinsn."'";
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+ 
+    // execute query
+    $stmt->execute();
+    return $stmt;
+}
+
+function update(){
+    // sanitize
+    $this->email=htmlspecialchars(strip_tags($this->email));
+    $this->coinsn=htmlspecialchars(strip_tags($this->coinsn));
+    $this->phone=htmlspecialchars(strip_tags($this->phone));    
+    $sql = "UPDATE users SET email = '". $this->email ."', phone = '".$this->phone."' where coinsn='".$this->coinsn."'" ;
+    //echo $sql;
+    $result = $this->conn->query($sql);
+    //echo $sql;
+    if($result){
+        return true;
+    }
+    return false;
     // read products
+}
+
+function upload(){
+    $this->profile_img=htmlspecialchars(strip_tags($this->profile_img));
+    $sql = "UPDATE users SET profile_img = '". $this->profile_img ."' where coinsn='".$this->coinsn."'" ;
+    //echo $sql;
+    $result = $this->conn->query($sql);
+    //echo $sql;
+    if($result){
+        return true;
+    }
+    return false;
+}
+
+
+
+function read_sn(){
+    // select all query
+    $query = "SELECT
+                c.coinsn,c.email as email, c.phone,c.profile_img
+            FROM
+                " . $this->table_name . " c
+            where c.coinsn ='". $this->coinsn."'";
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+    // execute query
+    $stmt->execute();
+    return $stmt;
+}
+
+
 function read(){
  
     // select all query
@@ -113,6 +188,56 @@ function readSellOrders($offset,$pageSize){
     $stmt->execute();
  
     return $stmt;
+}
+
+function file_upload(){
+    
+    $target_dir = "../../uploads/";
+    $filename = $_FILES['profile_img'];
+    $target_file = $target_dir . basename($_FILES["profile_img"]["name"]);
+    $uploadOk = 0;
+    if(!empty($_FILES["profile_img"]["name"])){
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    $newFilename = "profile_".rand(9,99999999).".".$imageFileType;
+     $target_file = $target_dir .$newFilename; 
+    $check = getimagesize($_FILES["profile_img"]["tmp_name"]);
+    $errorMessage ="";
+     if($check !== false) {
+        $uploadOk = 1;
+        if ($_FILES["profile_img"]["size"] > 500000) {
+            $errorMessage = "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+        if (file_exists($target_file)) {
+
+            $errorMessage = "Sorry, file already exists.";
+            $uploadOk = 0;
+        }
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+&& $imageFileType != "gif" ) {
+            $errorMessage = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadOk = 0;
+        }
+
+        if ($uploadOk == 0) {
+             $errorMessage = "Sorry, your file was not uploaded.";
+// if everything is ok, try to upload file
+        } else {
+
+        if (move_uploaded_file($_FILES["profile_img"]["tmp_name"], $target_file)) {
+        $errorMessage = "File uploaded sucessfully.";
+        } else {
+        $errorMessage = "Sorry, there was an error uploading your file.";
+        }
+        }
+     }
+ }else{
+    $newFilename = "";
+    $errorMessage = "Please upload file.";
+ }
+     $fileStatus =array("status"=>$uploadOk,"message"=>$errorMessage,"filename"=>$newFilename);
+     return $fileStatus;
+    
 }
 
 }

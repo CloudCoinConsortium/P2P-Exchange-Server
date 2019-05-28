@@ -93,13 +93,13 @@ function validate() {
         
         
         $sql = "INSERT INTO transactions (sellorderid,buyorderid,buyerid,sellerid, qty, price,currency, 
-        paymentmethod,transactiondate,lastmodified, buyerrating,sellerrating,buyercomment,sellercomment)
+        paymentmethod,transactiondate, buyerrating,sellerrating,buyercomment,sellercomment,transactionnumber,recieptnumber)
         VALUES ('" . $this->sellorderid ."','". $this->buyorderid."','" .$this->buyerid."','". 
-        $this->sellerid ."','" . $this->qty ."','". $this->price ."','". $this->currency. "','". $this->paymentmethod. 
-        $this->transactiondate ."','" . $this->transaactiondate ."','". $this->buyerrating ."','". $this->sellerrating. 
-        $this->buyercomment ."','" . $this->sellercomment ."')" ;
+        $this->sellerid ."','" . $this->qty ."','". $this->price ."','". $this->currency. "','". $this->paymentmethod. "','".
+        $this->transactiondate ."','" . $this->buyerrating ."','". $this->sellerrating. "','".
+        $this->buyercomment ."','" . $this->sellercomment ."','".$this->transactionno."','".$this->recieptno."')" ;
     
-       echo $sql;
+       //echo $sql;
 
        $countquery = "select count(*) as total from ". $this->table_name . " where coinsn=" . $this->coinsn ."";
 
@@ -245,7 +245,6 @@ function validate() {
     ORDER BY
         a.transactiondate DESC limit ". $offset . "," . $pageSize;
     }
- 
     // prepare query statement
     $stmt = $this->conn->prepare($query);
  

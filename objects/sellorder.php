@@ -25,17 +25,6 @@ function read(){
  
     // select all query
     $query = "SELECT
-<<<<<<< HEAD
-                c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
-            FROM
-                " . $this->table_name . " p
-                LEFT JOIN
-                    categories c
-                        ON p.category_id = c.id
-            ORDER BY
-                p.created DESC";
- 
-=======
                 c.id,c.username as username, c.qty, c.price, c.currency, c.dateposted, c.paymentmethod
             FROM
                 " . $this->table_name . " c
@@ -112,9 +101,10 @@ function validate() {
        if(!$this->validate()) {
         return false;
        }
-       if($openSellOrderCount > 0) {
+       // -----Skip Auth ---- Staging
+       /*if($openSellOrderCount > 0) {
            return false;
-       }
+       } */
 
         $result = $this->conn->query($sql);
         if($result){
@@ -225,7 +215,6 @@ function readSellOrders($offset,$pageSize,$sn,$opt){
                     c.dateposted DESC limit ". $offset . "," . $pageSize;
             
                 }
->>>>>>> 3711140d0872129c4a9796d20ca497567321f0e9
     // prepare query statement
     $stmt = $this->conn->prepare($query);
  
@@ -234,10 +223,7 @@ function readSellOrders($offset,$pageSize,$sn,$opt){
  
     return $stmt;
 }
-<<<<<<< HEAD
-}
-=======
+
 
 }
 ?>
->>>>>>> 3711140d0872129c4a9796d20ca497567321f0e9
