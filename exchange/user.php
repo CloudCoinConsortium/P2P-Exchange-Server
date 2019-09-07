@@ -7,7 +7,6 @@ class User{
  
     // object properties
     public $coinsn;
-    public $phone;
     public $email;
     public $code_name;
     public $dateofjoining;
@@ -20,9 +19,6 @@ class User{
 
 
 public function validate(){
-    if(empty($this->phone)){
-        return false;
-    }
     if(empty($this->email)){
         return false;
     }
@@ -46,14 +42,13 @@ function create(){
     // sanitize
     $this->email=htmlspecialchars(strip_tags($this->email));
     $this->coinsn=htmlspecialchars(strip_tags($this->coinsn));
-    $this->phone=htmlspecialchars(strip_tags($this->phone));
     $this->code_name=rand(9,99999);
     $this->banned=0;
     $this->dateofjoining=htmlspecialchars(strip_tags($this->dateofjoining));
     //$this->username=htmlspecialchars(strip_tags($this->username));
     
-    $sql = "INSERT INTO users (coinsn, email, phone,code_name, banned, dateofjoining)
-    VALUES ( " . $this->coinsn .",'". $this->email ."','". $this->phone ."','".
+    $sql = "INSERT INTO users (coinsn, email,code_name, banned, dateofjoining)
+    VALUES ( " . $this->coinsn .",'". $this->email ."','".
      $this->code_name."','". $this->banned."','".$this->dateofjoining . "')" ;
     // execute query
     $result = $this->conn->query($sql);
@@ -68,7 +63,7 @@ function create(){
 function user_exist(){
     // select all query
      $query = "SELECT
-                c.coinsn,c.phone as phone, c.email, c.dateofjoining
+                c.coinsn, c.email, c.dateofjoining
             FROM
                 " . $this->table_name . " c
             where c.coinsn='".$this->coinsn."'";
@@ -84,7 +79,7 @@ function user_exist(){
 function user_duplicate(){
     // select all query
      $query = "SELECT
-                c.coinsn,c.phone as phone, c.email, c.dateofjoining
+                c.coinsn, c.email, c.dateofjoining
             FROM
                 " . $this->table_name . " c
             where email='".$this->email."' and coinsn !='".$this->coinsn."'";
@@ -100,8 +95,7 @@ function update(){
     // sanitize
     $this->email=htmlspecialchars(strip_tags($this->email));
     $this->coinsn=htmlspecialchars(strip_tags($this->coinsn));
-    $this->phone=htmlspecialchars(strip_tags($this->phone));    
-    $sql = "UPDATE users SET email = '". $this->email ."', phone = '".$this->phone."' where coinsn='".$this->coinsn."'" ;
+    $sql = "UPDATE users SET email = '". $this->email ."' where coinsn='".$this->coinsn."'" ;
     //echo $sql;
     $result = $this->conn->query($sql);
     //echo $sql;
@@ -128,10 +122,8 @@ function upload(){
 
 function read_sn(){
     // select all query
-
-     //   c.coinsn,c.email as email, c.phone,c.profile_img
     $query = "SELECT
-            *
+                c.coinsn,c.email as email,c.profile_img
             FROM
                 " . $this->table_name . " c
             where c.coinsn ='". $this->coinsn."'";

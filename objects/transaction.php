@@ -190,12 +190,13 @@ function validate() {
          
     }
 
-    function rate($rating,$comment,$id) {
-        $buyercount = $this->executeCountQuery("select count(*) from transactions where buyerid=".$this->coinsn." and id=".$id);
-        $sellercount = $this->executeCountQuery("select count(*) from transactions where sellerid=".$this->coinsn." and id=".$id);
-        
+    function rate($rating,$comment,$id,$sn) {
+        $buyercount = $this->executeCountQuery("select count(*) from transactions where buyerid=$sn and id=$id");
+        $sellercount = $this->executeCountQuery("select count(*) from transactions where sellerid=$sn and id=$id");
+   
+
         if($buyercount > 0) {
-            $updatesql= "update transactions set buyerrating=".$rating.", buyercomment ='".$comment."' where id=".$id;
+            $updatesql= "update transactions set buyerrating=$rating, buyercomment ='$comment.' where id=$id";
             $result = $this->conn->query($updatesql);
             if($result){
                 return true;
@@ -207,7 +208,7 @@ function validate() {
         }
 
         if($sellercount > 0) {
-            $updatesql= "update transactions set sellerrating=".$rating.", sellercomment ='".$comment."' where id=".$id;
+            $updatesql= "update transactions set sellerrating=$rating, sellercomment ='$comment.' where id=$id";
             $result = $this->conn->query($updatesql);
             if($result){
                 return true;
@@ -228,22 +229,22 @@ function validate() {
     // select all query
     if($opt== "all") {
         $query = "SELECT
-        a.id,b.username as seller, c.username as buyer, a.qty, a.price, a.currency, a.transactiondate, a.paymentmethod, 
-        a.buyercomment,a.sellercomment, a.buyerrating,a.sellerrating
+        *
     FROM
-        " . $this->table_name . " a,users b,users c where a.sellerid=b.coinsn and a.buyerid=c.coinsn
-    ORDER BY
-        a.transactiondate DESC limit ". $offset . "," . $pageSize;
+        exchange.transactions
+
+    Limit $offset , $pageSize";
+        
     }
-    else {
+     else {
         $query = "SELECT
-        a.id,b.username as seller, c.username as buyer, a.qty, a.price, a.currency, a.transactiondate, a.paymentmethod,
-        a.buyercomment,a.sellercomment,a.buyerrating,a.sellerrating
+    *
     FROM
-        " . $this->table_name . " a,users b, users c where a.sellerid=b.coinsn and a.buyerid=c.coinsn and (a.sellerid=". 
-        $sn." or a.buyerid=". $sn .")
-    ORDER BY
-        a.transactiondate DESC limit ". $offset . "," . $pageSize;
+        exchange.transactions
+    WHERE
+    buyerid=$opt
+    OR sellerid=$opt
+    Limit $offset , $pageSize";
     }
     // prepare query statement
     $stmt = $this->conn->prepare($query);
